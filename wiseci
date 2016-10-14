@@ -1,0 +1,18 @@
+<?php
+
+/**
+ *  APPPATH Codeigniter Application path
+ */
+define('APPPATH', __DIR__ .'/application/');
+
+/**
+ * BASEPATH Codeigniter system path;
+ */
+define('BASEPATH', __DIR__ .'/system/');
+
+
+require_once 'Wisecore/autoload.php';
+
+$wise = new \Wisecore\Wiseci(new \Wisecore\ServerArguments());
+$wise->handler();
+
