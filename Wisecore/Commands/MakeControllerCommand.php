@@ -64,16 +64,21 @@ class MakeControllerCommand
         }
 
         $path = '';
-
         if (($slashPos = strrpos($key, '/')) !== false) {
-            $path = substr($key, 0, $slashPos++);
+            $path = substr($key, 0, ++$slashPos);
+            
         }
-
-        $class = ucfirst(substr($key, $slashPos));
-
-        $stub = str_replace('{@CLASSNAME@}', $class, file_get_contents($this->stub));
+        
+        $class = substr($key, $slashPos);
+        if (version_compare(CI_VERSION, '3.0.0', 'ge')) {
+            $class = ucfirst($class);
+        }
+        
+        
+        $stub = str_replace('{@CLASSNAME@}', ucfirst($class), file_get_contents($this->stub));
 
         $newPath = APPPATH . 'controllers/' . $path;
+        echo $newPath;
 
         if (! is_dir($newPath)) {
             if (! mkdir($newPath, 0644, true)) {
@@ -84,6 +89,7 @@ class MakeControllerCommand
         if (file_put_contents($newPath . $class. '.php', $stub)) {
             $this->response('Controller ' . $class . ' was created');
         }
+        
         exit(0);
     }
 

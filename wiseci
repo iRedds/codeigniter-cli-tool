@@ -1,6 +1,12 @@
 <?php
 
 /**
+ *  CI_VERSION Current Codeigniter version
+ */
+
+define('CI_VERSION', 2);
+
+/**
  *  APPPATH Codeigniter Application path
  */
 define('APPPATH', __DIR__ .'/application/');
