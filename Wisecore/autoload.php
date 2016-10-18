@@ -4,7 +4,7 @@
  *  WiseCI autoload
  */
 
-spl_autoload_register(function($class){
+spl_autoload_register(function ($class) {
 
     if (strpos($class, 'Wisecore\\') === 0) {
         $path = dirname(__DIR__) . '/' . str_replace('\\', '/', $class) . '.php';

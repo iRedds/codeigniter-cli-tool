@@ -14,7 +14,7 @@ define('APPPATH', __DIR__ .'/application/');
 /**
  * BASEPATH Codeigniter system path;
  */
-define('BASEPATH', __DIR__ .'/system/');
+define('BASEPATH', __DIR__ .'/Codeigniter/2.2.6/');
 
 
 require_once 'Wisecore/autoload.php';

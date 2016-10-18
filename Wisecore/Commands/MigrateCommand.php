@@ -27,7 +27,11 @@ class MigrateCommand
      */
     protected $ci;
 
-    protected $params = [];
+    /**
+     * Codeigniter Config object
+     * @var object
+     */
+    protected $cfg;
 
     /**
      * Associative array of local keys
@@ -48,6 +52,10 @@ class MigrateCommand
      */
     public function handler(array $params)
     {
+        if (count($params) == 0) {
+            $this->error(['Missing parameters', 'Use --help']);
+        }
+
         $this->initCodeigniter();
 
         $this->callLocalKeys($params);
@@ -57,8 +65,23 @@ class MigrateCommand
 
     private function showList()
     {
-        $migrations = $this->ci->migration->find_migrations();
-
+        if (version_compare(CI_VERSION, '3.0.0', 'ge')){
+            $migrations = $this->ci->migration->find_migrations();
+        } else {
+            $cfg = $this->cfg->item('migration');
+            $iterator = new \DirectoryIterator($cfg['migration_path']);
+            $migrations = [];
+            foreach ($iterator as $file) {
+                if ($file->isFile()) {
+                    $name = $file->getFilename();
+                    $key = preg_replace('/^(\d+)_.+/', '$1', $name);
+                    $migrations[$key] = $name;
+                }
+            }
+            if (count($migrations) > 0) {
+                natsort($migrations);
+            }
+        }
         if (count($migrations) > 0) {
             $message = [
                 str_pad('----- Migrations :', 100, '-'),
@@ -112,14 +135,14 @@ class MigrateCommand
     private function initCodeigniter()
     {
         require_once BASEPATH .'/core/Common.php';
-        define ('VIEWPATH', APPPATH .'views/');
+         define ('VIEWPATH', APPPATH .'views/');
         $load = load_class('Loader', 'core');
         $lang = load_class('Lang', 'core');
-
+        $this->cfg = load_class('Config', 'core');
+        $input = load_class('Input', 'core');
         $this->ci = new \CI_Controller();
-        $cfg = new \CI_Config();
-        $cfg->load('migration', true);
-        $this->ci->migration = new \CI_Migration($cfg->item('migration'));
+        $this->cfg->load('migration', true);
+        $this->ci->migration = new \CI_Migration($this->cfg->item('migration'));
     }
 
 }
