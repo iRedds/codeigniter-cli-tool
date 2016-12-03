@@ -67,9 +67,21 @@ class MakeModelCommand
             $path = substr($name, 0, $slashPos++);
         }
 
+        $namespace = ($params['--ns']) ? 'namespace '.str_replace('/', '\\', $params['--ns']).';' : '';
+
         $class = ucfirst(substr($name, $slashPos));
 
-        $stub = str_replace('{@CLASSNAME@}', $class, file_get_contents($this->stub));
+        $date = new \DateTime();
+        $template =  strtr(
+            file_get_contents($this->stub),
+            [
+                '{@CLASSNAME@}' => ucfirst($class),
+                '{@NAMESPACE@}' => $namespace,
+                '{@DATE@}'      => $date->format('d.m.Y'),
+                '{@TIME@}'      => $date->format('H:i:s'),
+            ]
+        );
+
 
         $newPath = APPPATH . 'models/' . $path;
 
@@ -79,7 +91,8 @@ class MakeModelCommand
             }
         }
 
-        if (file_put_contents($newPath . '/' . $class. '.php', $stub)) {
+        if (file_put_contents($newPath . '/' . $class. '.php', $template)) {
+            $class = ($namespace) ? str_replace('/', '\\', $params['--ns'])."\\$class" : $class;
             $this->response('Model ' . $class . ' was created');
         }
         exit(0);
@@ -94,6 +107,8 @@ class MakeModelCommand
             'Create model examples:',
             'php wiseci make:model --name=Modelname',
             'php wiseci make:model --name=Path/To/Modelname',
+            'With namespace: --ns',
+            'php wiseci make:model --name=Path/To/Modelname --ns=Model/Namespace ',
         ]);
     }
 }

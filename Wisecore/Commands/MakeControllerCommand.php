@@ -73,9 +73,16 @@ class MakeControllerCommand
         if (version_compare(CI_VERSION, '3.0.0', 'ge')) {
             $class = ucfirst($class);
         }
-        
-        
-        $stub = str_replace('{@CLASSNAME@}', ucfirst($class), file_get_contents($this->stub));
+
+        $date = new \DateTime();
+        $template =  strtr(
+            file_get_contents($this->stub),
+            [
+                '{@CLASSNAME@}' => ucfirst($class),
+                '{@DATE@}'      => $date->format('d.m.Y'),
+                '{@TIME@}'      => $date->format('H:i:s'),
+            ]
+        );
 
         $newPath = APPPATH . 'controllers/' . $path;
         echo $newPath;
@@ -86,7 +93,7 @@ class MakeControllerCommand
             }
         }
 
-        if (file_put_contents($newPath . $class. '.php', $stub)) {
+        if (file_put_contents($newPath . $class. '.php', $template)) {
             $this->response('Controller ' . $class . ' was created');
         }
         

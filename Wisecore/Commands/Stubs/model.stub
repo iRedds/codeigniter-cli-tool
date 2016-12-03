@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * Created by WiseCI
+ * Date: {@DATE@}
+ * Time: {@TIME@}
+ */
+
+{@NAMESPACE@}
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class {@CLASSNAME@} extends CI_Model

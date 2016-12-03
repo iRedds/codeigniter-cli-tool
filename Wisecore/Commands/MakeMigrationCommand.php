@@ -60,11 +60,16 @@ class MakeMigrationCommand
             $this->error('Migration with name "' . $name . '" (' . $file. ') already exists');
         }
 
-        $template =  strtr(file_get_contents($this->stub),
+        $date = new \DateTime();
+        $template =  strtr(
+            file_get_contents($this->stub),
             [
                 '{@MIGRATION_NAME@}' => ucfirst($name),
-                '{@TABLE@}' => $params['--table'] ? $params['--table'] : 'table',
-            ]);
+                '{@TABLE@}'          => $params['--table'] ? $params['--table'] : 'table',
+                '{@DATE@}'           => $date->format('d.m.Y'),
+                '{@TIME@}'           => $date->format('H:i:s'),
+            ]
+        );
 
         $this->isWritableDirectory($path);
 
@@ -113,7 +118,7 @@ class MakeMigrationCommand
 
         foreach ($iterator as $file) {
             if ($file->isFile() && preg_match('/^\d{3,4}_.*/', $file->getFilename())) {
-                $files[] = preg_replace('/^(\d{3,4})_.*/', '$1', $file->getFilename());
+                $files[] = preg_replace('/^(\d{3})_.*/', '$1', $file->getFilename());
             }
         }
 
@@ -124,11 +129,11 @@ class MakeMigrationCommand
         natsort($files);
         $number = end($files);
 
-        if (++$number > 9999) {
+        if (++$number > 999) {
             return $this->error('The limit numbering. Seriously?  Over 9999 migrations?');
         }
 
-        return str_pad($number, 4, '0', STR_PAD_LEFT);
+        return str_pad($number, 3, '0', STR_PAD_LEFT);
     }
 
     private function existsName($name)

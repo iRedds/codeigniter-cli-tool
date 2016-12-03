@@ -1,68 +1,67 @@
- <?php
+<?php
 
  namespace Wisecore\Commands;
-
 
  use Wisecore\WiseTrait;
 
  class {@CLASSNAME@}
- {
-     use WiseTrait;
+{
+    use WiseTrait;
 
-     /**
-      * Path to template. Optionaly
-      * @var string
-      */
-     protected $stub = __DIR__.'/Stubs/template.stub';
+    /**
+    * Path to template. Optionaly
+    * @var string
+    */
+    protected $stub = __DIR__.'/Stubs/template.stub';
 
-     /**
-      * Command name
-      * @var string
-      */
-     public $command = 'command:name';
+    /**
+    * Command name
+    * @var string
+    */
+    public $command = 'command:name';
 
-     /**
-      * Command description
-      * @var string
-      */
-     public $description = "Description";
+    /**
+    * Command description
+    * @var string
+    */
+    public $description = "Description";
 
-     /**
-      * Associative array of local keys
-      * --key => methodName
-      * @var array
-      */
-     protected $localKeys = [
-         '--help' => 'showHelp',
-     ];
+    /**
+    * Associative array of local keys
+    * --key => methodName
+    * @var array
+    */
+    protected $localKeys = [
+     '--help' => 'showHelp',
+    ];
 
-     /**
-      * Command body
-      * @param array $params
-      * @return $this
-      */
-     public function execute($params)
-     {
-         if (count($params) == 0) {
-             return $this->error('Missing command name', false)
-                 ->response('Use --help');
-         }
-
-         $key = array_pop($params);
-
-         if (array_key_exists($key, $this->localKeys) !== false) {
-             return call_user_func([$this, $this->localKeys[$key]]);
-         }
-
-         exit(0);
+    /**
+    * Command body
+    * @param array $params
+    * @return $this
+    */
+    public function execute($params)
+    {
+     if (count($params) == 0) {
+         return $this->error('Missing command name', false)
+             ->response('Use --help');
      }
 
-     /**
-      *  Help message
-      */
-     private function showHelp()
-     {
-         return $this->response('This --help for command');
+     $key = array_pop($params);
+
+     if (array_key_exists($key, $this->localKeys) !== false) {
+         return call_user_func([$this, $this->localKeys[$key]]);
      }
 
- }
+     exit(0);
+    }
+
+    /**
+    *  Help message
+    */
+    private function showHelp()
+    {
+     return $this->response('This --help for command');
+    }
+
+}
