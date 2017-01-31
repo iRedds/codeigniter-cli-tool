@@ -30,7 +30,9 @@ class Migration_{@MIGRATION_NAME@} extends CI_Migration
             ],
         ]);
         $this->dbforge->add_key('id', true);
-        $this->dbforge->create_table('{@TABLE@}');
+        $this->dbforge->create_table('{@TABLE@}', true); // true - IF NOT EXISTS
+        // Convert to InnoDB
+        $this->db->query('ALTER TABLE {@TABLE@} ENGINE=InnoDB;');
         //add column
         // $this->dbforge->add_column('{@TABLE@}', [ 'column' => ['type' => 'INT', ....], 'column2' => [....] ]);
 */

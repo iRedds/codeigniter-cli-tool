@@ -18,6 +18,7 @@ define('BASEPATH', __DIR__ .'/Codeigniter/2.2.6/');
 
 
 require_once 'Wisecore/autoload.php';
+require_once 'application/vendor/autoload.php';
 
 $wise = new \Wisecore\Wiseci(new \Wisecore\ServerArguments());
 $wise->handler();

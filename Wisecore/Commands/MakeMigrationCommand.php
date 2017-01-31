@@ -56,9 +56,9 @@ class MakeMigrationCommand
         $this->cfg->load('migration');
         $path = $this->cfg->item('migration_path');
 
-        if ($file = $this->existsName($name)) {
-            $this->error('Migration with name "' . $name . '" (' . $file. ') already exists');
-        }
+//        if ($file = $this->existsName($name)) {
+//            $this->error('Migration with name "' . $name . '" (' . $file. ') already exists');
+//        }
 
         $date = new \DateTime();
         $template =  strtr(
